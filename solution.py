@@ -79,6 +79,26 @@ def only_choice(values):
                 values = assign_value(values, dplaces[0], digit)
     return values
 
+def naked_twins(values):
+    twins = []
+    for k1, v1 in values.items():
+        if len(v1) == 2:
+            for k2, v2 in values.items():
+                if k1 == k2:
+                    break
+                if v1 == v2 and v1 not in twins:
+                    twins.append(v1)
+
+    for twin in twins:
+        for i in twin:
+            for box in units:
+                for value in values[box]:
+                    if values != i:
+                        values = assign_value(values, box, values[box].replace(i, ''))
+
+    return values
+
+
 def reduce_puzzle(values):
     stalled = False
     while not stalled:
@@ -88,6 +108,8 @@ def reduce_puzzle(values):
         values = eliminate(values)
         # Use the Only Choice Strategy
         values = only_choice(values)
+        # Use Naked Twin Strategy
+        values = naked_twins(values)
         # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
         # If no new values were added, stop the loop.
