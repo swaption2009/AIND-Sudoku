@@ -80,20 +80,14 @@ def only_choice(values):
     return values
 
 def naked_twins(values):
-    twins = []
-    for k1, v1 in values.items():
-        if len(v1) == 2:
-            for k2, v2 in values.items():
-                if k1 == k2:
-                    break
-                if v1 == v2 and v1 not in twins:
-                    twins.append(v1)
 
-    for twin in twins:
-        for i in twin:
-            for box in units:
-                for value in values[box]:
-                    if values != i:
+    for unit in unitlist:
+        unit_values = [values[box] for box in unit]
+        twins = [v for v in unit_values if unit_values.count(v) == 2 and len(v) == 2]
+        for twin in twins:
+            for i in twin:
+                for box in unit:
+                    if values[box] != twin:
                         values = assign_value(values, box, values[box].replace(i, ''))
 
     return values
