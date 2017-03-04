@@ -81,11 +81,14 @@ def only_choice(values):
 
 def naked_twins(values):
 
+    # loop through each unit in diagonal sudoku unitlist
     for unit in unitlist:
         unit_values = [values[box] for box in unit]
+        # identify naked_twins where matching boxes' values have a pair value and appears twice
         twins = [v for v in unit_values if unit_values.count(v) == 2 and len(v) == 2]
         for twin in twins:
             for i in twin:
+                # loop through every box and eliminate any digit that consists of naked twin digits
                 for box in unit:
                     if values[box] != twin:
                         values = assign_value(values, box, values[box].replace(i, ''))
@@ -147,11 +150,13 @@ row_units = [cross(r, cols) for r in rows]
 col_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
 
-# diagonal sudoku
+# diagonal sudoku units
 diagonal1 = [[rows[i]+cols[i] for i in range(len(rows))]]
 diagonal2 = [[rows[i]+cols[::-1][i] for i in range(len(rows))]]
 
+# create unitlist with all units, ie. row, column, square, and diagonal units
 unitlist = row_units + col_units + square_units + diagonal1 + diagonal2
+
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 peers = dict((s, set(sum(units[s],[]))-set([s])) for s in boxes)
 
